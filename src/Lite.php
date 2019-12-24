@@ -24,19 +24,19 @@ class Lite
             ->asDefaultClient();
     }
 
-    public function pushMessage($device_id, $device_type, $content, $title, $extras)
+    public function pushMessage($target, $targetValue, $deviceType, $content, $title, $extras)
     {
         $params = [
             'AppKey' => $this->config['appKey'],
             'PushType' => 'MESSAGE',
-            'DeviceType' => $device_type,
-            'Target' => 'DEVICE',
-            'TargetValue' => $device_id,
+            'DeviceType' => $deviceType,
+            'Target' => $target,
+            'TargetValue' => $targetValue,
             'Body' => $content,
             'Title' => $title,
             'StoreOffline' => 'false',
         ];
-        if ($device_type == 'ANDROID') {
+        if ($deviceType == 'ANDROID') {
             $params = array_merge($params, [
                 'AndroidNotifyType' => 'BOTH',            //通知的提醒方式 "VIBRATE" : 震动 "SOUND" : 声音 "BOTH" : 声音和震动 NONE : 静音
                 //'AndroidNotificationBarType' => "1",	//通知栏自定义样式0-100
@@ -48,12 +48,53 @@ class Lite
                 //'AndroidPopupBody' => $content,
                 //'AndroidNotificationChannel' => '',
                 //'AndroidNotificationBarPriority' => '',
-                //'AndroidMusic' => "default",			//Android通知音乐
+                'AndroidMusic' => 'default',
                 'AndroidExtParameters' => $extras, // 设定android类型设备通知的扩展属性
+            ]);
+        } else if ($deviceType == 'IOS') {
+            $params = array_merge($params, [
+                'iOSMusic' => 'default',
+                'iOSApnsEnv' => 'PRODUCT',
+                'iOSBadgeAutoIncrement' => false,
+                'iOSSilentNotification' => false,
+                'iOSRemind' => false,
+                'iOSExtParameters' => $extras,
             ]);
         }
 
         return $this->rpcRequest('Push', $params);
+
+    }
+
+    public function pushNotice($target, $targetValue, $deviceType, $content, $title)
+    {
+        $params = [
+            'AppKey' => $this->config['appKey'],
+            'PushType' => 'NOTICE',
+            'Target' => $target,
+            'TargetValue' => $targetValue,
+            'Body' => $content,
+            'Title' => $title,
+        ];
+        if ($deviceType == 'ANDROID') {
+            return $this->rpcRequest('PushNoticeToAndroid', $params);
+        } else if ($deviceType == 'IOS') {
+            $params = array_merge($params, [
+                'iOSApnsEnv' => 'PRODUCT',
+            ]);
+            return $this->rpcRequest('PushNoticeToiOS', $params);
+        }
+    }
+
+    public function bindAlias($aliasName, $deviceId)
+    {
+        $params = [
+            'AppKey' => $this->config['appKey'],
+            'AliasName' => $aliasName,
+            'DeviceId' => $deviceId,
+        ];
+
+        return $this->rpcRequest('BindAlias', $params);
     }
 
     private function rpcRequest($action, $params)
