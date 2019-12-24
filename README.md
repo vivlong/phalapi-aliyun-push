@@ -32,6 +32,6 @@ $di->aliyunPush = function() {
 ## 使用
 使用方式：
 ```php
-  \PhalApi\DI()->aliyunPush->sendPush();
+  \PhalApi\DI()->aliyunPush->pushMessage();
 ```  
 
