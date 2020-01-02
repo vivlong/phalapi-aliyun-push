@@ -35,25 +35,25 @@ class Lite
             'Body' => $content,
             'Title' => $title,
             'StoreOffline' => 'true',
-            'ExpireTime' => gmdate('Y-m-d\TH:i:s\Z', strtotime('+1 day'))
+            'ExpireTime' => gmdate('Y-m-d\TH:i:s\Z', strtotime('+1 day')),
         ];
         if (strtolower($deviceType) === strtolower('ANDROID')) {
             $params = array_merge($params, [
                 'AndroidNotifyType' => 'BOTH',            //通知的提醒方式 "VIBRATE" : 震动 "SOUND" : 声音 "BOTH" : 声音和震动 NONE : 静音
                 //'AndroidNotificationBarType' => 1,	//通知栏自定义样式0-100
                 //'AndroidNotificationBarPriority' => 0, //Android通知在通知栏展示时排列位置的优先级 -2 -1 0 1 2
-                'AndroidOpenType' => 'APPLICATION',		//点击通知后动作 "APPLICATION" : 打开应用 "ACTIVITY" : 打开AndroidActivity "URL" : 打开URL "NONE" : 无跳转
+                'AndroidOpenType' => 'APPLICATION',        //点击通知后动作 "APPLICATION" : 打开应用 "ACTIVITY" : 打开AndroidActivity "URL" : 打开URL "NONE" : 无跳转
                 //'AndroidOpenUrl' => '', 				//Android收到推送后打开对应的url,仅当AndroidOpenType="URL"有效
                 //'AndroidActivity' => '',
                 'AndroidRemind' => true,    //推送类型为消息时设备不在线，则这条推送会使用辅助弹窗功能。默认值为False，仅当PushType=MESSAGE时生效。
-                'AndroidPopupActivity' => "com.b2b2c.app.PopupPushActivity", 	//设定通知打开的activity，仅当AndroidOpenType="Activity"有效
+                'AndroidPopupActivity' => 'com.b2b2c.app.PopupPushActivity',    //设定通知打开的activity，仅当AndroidOpenType="Activity"有效
                 'AndroidPopupTitle' => $title,
                 'AndroidPopupBody' => $content,
                 'AndroidMusic' => 'default',
                 'AndroidNotificationChannel' => $this->config['androidChannel'], //设置NotificationChannel参数
                 'AndroidExtParameters' => $extras, // 设定android类型设备通知的扩展属性
             ]);
-        } else if (strtolower($deviceType) === strtolower('IOS')) {
+        } elseif (strtolower($deviceType) === strtolower('IOS')) {
             $params = array_merge($params, [
                 'iOSMusic' => 'default',
                 'iOSApnsEnv' => 'PRODUCT',
@@ -67,7 +67,6 @@ class Lite
         }
 
         return $this->rpcRequest('Push', $params);
-
     }
 
     public function bindAlias($aliasName, $deviceId)
@@ -106,30 +105,22 @@ class Lite
                 $rs['code'] = 1;
                 $rs['msg'] = 'success';
                 $rs['data'] = $result->toArray();
-                if ($di->debug) {
-                    $di->logger->log('AliyunPush', 'push', array('rs' => $response['body']));
-                }
+                $di->logger->info('AliyunPush', 'push', array('rs' => $response['body']));
             } else {
                 $rs['code'] = -1;
                 $rs['msg'] = $result;
-                if ($di->debug) {
-                    $di->logger->log('AliyunPush', 'push', array('failed' => $result));
-                }
+                $di->logger->error('AliyunPush', 'push', array('failed' => $result));
             }
         } catch (ClientException $e) {
-            \PhalApi\DI()->logger->error('AliyunPush # rpcRequest', $e->getErrorMessage());
+            $di->logger->error('AliyunPush # rpcRequest', $e->getErrorMessage());
             $rs['code'] = -1;
             $rs['msg'] = $result;
-            if ($di->debug) {
-                $di->logger->log('AliyunPush', 'push', array('failed' => $result));
-            }
+            $di->logger->error('AliyunPush', 'push', array('failed' => $result));
         } catch (ServerException $e) {
-            \PhalApi\DI()->logger->error('AliyunPush # rpcRequest', $e->getErrorMessage());
+            $di->logger->error('AliyunPush # rpcRequest', $e->getErrorMessage());
             $rs['code'] = -1;
             $rs['msg'] = $result;
-            if ($di->debug) {
-                $di->logger->log('AliyunPush', 'push', array('failed' => $result));
-            }
+            $di->logger->error('AliyunPush', 'push', array('failed' => $result));
         }
 
         return $rs;
