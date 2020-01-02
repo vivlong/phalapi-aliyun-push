@@ -24,7 +24,7 @@ class Lite
             ->asDefaultClient();
     }
 
-    public function push($pushTpye, $target, $targetValue, $deviceType, $content, $title, $extras = "{}")
+    public function push($pushTpye, $target, $targetValue, $deviceType, $content, $title, $extras)
     {
         $params = [
             'PushType' => $pushTpye,
