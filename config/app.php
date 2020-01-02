@@ -9,5 +9,6 @@ return array(
         'accessKeySecret'   => '<yourAccessKeySecret>',
         'appKey'            => '<yourAppKey>',
         'regionId'          => 'cn-hangzhou',
+        'androidChannel'    => '<yourChannel>',
     ),
 );

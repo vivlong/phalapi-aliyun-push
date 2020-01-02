@@ -24,11 +24,11 @@ class Lite
             ->asDefaultClient();
     }
 
-    public function pushMessage($target, $targetValue, $deviceType, $content, $title, $extras)
+    public function push($pushTpye, $target, $targetValue, $deviceType, $content, $title, $extras)
     {
         $params = [
             'AppKey' => $this->config['appKey'],
-            'PushType' => 'MESSAGE',
+            'PushType' => $pushTpye,
             'DeviceType' => $deviceType,
             'Target' => $target,
             'TargetValue' => $targetValue,
@@ -41,15 +41,16 @@ class Lite
             $params = array_merge($params, [
                 'AndroidNotifyType' => 'BOTH',            //通知的提醒方式 "VIBRATE" : 震动 "SOUND" : 声音 "BOTH" : 声音和震动 NONE : 静音
                 //'AndroidNotificationBarType' => 1,	//通知栏自定义样式0-100
+                //'AndroidNotificationBarPriority' => 0, //Android通知在通知栏展示时排列位置的优先级 -2 -1 0 1 2
                 'AndroidOpenType' => 'APPLICATION',		//点击通知后动作 "APPLICATION" : 打开应用 "ACTIVITY" : 打开AndroidActivity "URL" : 打开URL "NONE" : 无跳转
                 //'AndroidOpenUrl' => '', 				//Android收到推送后打开对应的url,仅当AndroidOpenType="URL"有效
                 //'AndroidActivity' => '',
+                'AndroidRemind' => true,    //推送类型为消息时设备不在线，则这条推送会使用辅助弹窗功能。默认值为False，仅当PushType=MESSAGE时生效。
                 'AndroidPopupActivity' => "com.b2b2c.app.PopupPushActivity", 	//设定通知打开的activity，仅当AndroidOpenType="Activity"有效
                 'AndroidPopupTitle' => $title,
                 'AndroidPopupBody' => $content,
-                //'AndroidNotificationChannel' => '',
-                //'AndroidNotificationBarPriority' => '',
                 'AndroidMusic' => 'default',
+                'AndroidNotificationChannel' => $this->config['androidChannel'], //设置NotificationChannel参数
                 'AndroidExtParameters' => $extras, // 设定android类型设备通知的扩展属性
             ]);
         } else if (strtolower($deviceType) === strtolower('IOS')) {
@@ -58,6 +59,7 @@ class Lite
                 'iOSApnsEnv' => 'PRODUCT',
                 'iOSBadgeAutoIncrement' => false,
                 'iOSSilentNotification' => false,
+                'iOSMutableContent' => true,
                 'iOSRemind' => true,
                 'iOSRemindBody' => $content,
                 'iOSExtParameters' => $extras,
@@ -66,26 +68,6 @@ class Lite
 
         return $this->rpcRequest('Push', $params);
 
-    }
-
-    public function pushNotice($target, $targetValue, $deviceType, $content, $title)
-    {
-        $params = [
-            'AppKey' => $this->config['appKey'],
-            'PushType' => 'NOTICE',
-            'Target' => $target,
-            'TargetValue' => $targetValue,
-            'Body' => $content,
-            'Title' => $title,
-        ];
-        if (strtolower($deviceType) === strtolower('ANDROID')) {
-            return $this->rpcRequest('PushNoticeToAndroid', $params);
-        } else if (strtolower($deviceType) === strtolower('IOS')) {
-            $params = array_merge($params, [
-                'iOSApnsEnv' => 'PRODUCT',
-            ]);
-            return $this->rpcRequest('PushNoticeToiOS', $params);
-        }
     }
 
     public function bindAlias($aliasName, $deviceId)
