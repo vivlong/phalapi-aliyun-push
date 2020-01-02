@@ -1,5 +1,6 @@
 # 阿里云移动推送服务端扩展
-PhalApi 2.x 扩展类库：基于阿里云移动推送的服务端扩展。
+PhalApi 2.x 扩展类库：基于阿里云移动推送的服务端扩展。  
+![Packagist](https://img.shields.io/packagist/dt/vivlong/phalapi-aliyun-push)  
 
 ## 安装和配置
 修改项目下的composer.json文件，并添加：  
