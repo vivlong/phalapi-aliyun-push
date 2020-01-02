@@ -27,7 +27,6 @@ class Lite
     public function push($pushTpye, $target, $targetValue, $deviceType, $content, $title, $extras)
     {
         $params = [
-            'AppKey' => $this->config['appKey'],
             'PushType' => $pushTpye,
             'DeviceType' => $deviceType,
             'Target' => $target,
@@ -35,32 +34,32 @@ class Lite
             'Body' => $content,
             'Title' => $title,
             'StoreOffline' => 'true',
-            'ExpireTime' => gmdate('Y-m-d\TH:i:s\Z', strtotime('+1 day')),
+            //'ExpireTime' => gmdate('Y-m-d\TH:i:s\Z', strtotime('+1 day')),
         ];
         if (strtolower($deviceType) === strtolower('ANDROID')) {
             $params = array_merge($params, [
-                'AndroidNotifyType' => 'BOTH',            //通知的提醒方式 "VIBRATE" : 震动 "SOUND" : 声音 "BOTH" : 声音和震动 NONE : 静音
-                //'AndroidNotificationBarType' => 1,	//通知栏自定义样式0-100
-                //'AndroidNotificationBarPriority' => 0, //Android通知在通知栏展示时排列位置的优先级 -2 -1 0 1 2
-                'AndroidOpenType' => 'APPLICATION',        //点击通知后动作 "APPLICATION" : 打开应用 "ACTIVITY" : 打开AndroidActivity "URL" : 打开URL "NONE" : 无跳转
-                //'AndroidOpenUrl' => '', 				//Android收到推送后打开对应的url,仅当AndroidOpenType="URL"有效
+                'AndroidNotifyType' => 'BOTH',              //通知的提醒方式 "VIBRATE" : 震动 "SOUND" : 声音 "BOTH" : 声音和震动 NONE : 静音
+                'AndroidNotificationBarType' => '1',	        //通知栏自定义样式0-100
+                'AndroidNotificationBarPriority' => '0',      //Android通知在通知栏展示时排列位置的优先级 -2 -1 0 1 2
+                'AndroidOpenType' => 'APPLICATION',         //点击通知后动作 "APPLICATION" : 打开应用 "ACTIVITY" : 打开AndroidActivity "URL" : 打开URL "NONE" : 无跳转
+                //'AndroidOpenUrl' => '', 				    //Android收到推送后打开对应的url,仅当AndroidOpenType="URL"有效
                 //'AndroidActivity' => '',
-                'AndroidRemind' => true,    //推送类型为消息时设备不在线，则这条推送会使用辅助弹窗功能。默认值为False，仅当PushType=MESSAGE时生效。
+                'AndroidRemind' => 'true',                    //推送类型为消息时设备不在线，则这条推送会使用辅助弹窗功能。默认值为False，仅当PushType=MESSAGE时生效。
                 'AndroidPopupActivity' => 'com.b2b2c.app.PopupPushActivity',    //设定通知打开的activity，仅当AndroidOpenType="Activity"有效
                 'AndroidPopupTitle' => $title,
                 'AndroidPopupBody' => $content,
                 'AndroidMusic' => 'default',
                 'AndroidNotificationChannel' => $this->config['androidChannel'], //设置NotificationChannel参数
-                'AndroidExtParameters' => $extras, // 设定android类型设备通知的扩展属性
+                'AndroidExtParameters' => $extras,          // 设定android类型设备通知的扩展属性
             ]);
         } elseif (strtolower($deviceType) === strtolower('IOS')) {
             $params = array_merge($params, [
                 'iOSMusic' => 'default',
                 'iOSApnsEnv' => 'PRODUCT',
-                'iOSBadgeAutoIncrement' => false,
-                'iOSSilentNotification' => false,
-                'iOSMutableContent' => true,
-                'iOSRemind' => true,
+                'iOSBadgeAutoIncrement' => 'false',
+                'iOSSilentNotification' => 'false',
+                'iOSMutableContent' => 'true',
+                'iOSRemind' => 'true',
                 'iOSRemindBody' => $content,
                 'iOSExtParameters' => $extras,
             ]);
@@ -97,6 +96,7 @@ class Lite
                 ->host('cloudpush.aliyuncs.com')
                 ->options([
                     'query' => array_merge([
+                        'AppKey' => $this->config['appKey'],
                         'RegionId' => $this->config['regionId'],
                     ], $params),
                 ])
