@@ -1,12 +1,11 @@
 {
 	"name": "vivlong/phalapi-aliyun-push",
-	"description": "PhalApi 2.x 扩展类库：基于阿里云移动推送的服务端扩展",
+	"description": "PhalApi 2.x 扩展类库：基于阿里云移动推送的服务端扩展。",
 	"type": "library",
 	"keywords": [
 		"phalapi", "phalapi-aliyun-push", "alipush", "aliyunpush"
 	],
-	"license": "GPL-3.0+",
-	"minimum-stability": "dev",
+	"license": "MulanPSL-2.0",
 	"homepage": "https://www.phalapi.net/",
 	"authors": [{
 		"name": "vivlong",
@@ -15,7 +14,7 @@
 		"role": "Developer"
 	}],
 	"require": {
-		"alibabacloud/sdk": "^1.5"
+		"alibabacloud/sdk": "^1.8"
 	},
 	"autoload": {
 		"psr-4": {

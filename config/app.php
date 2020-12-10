@@ -10,5 +10,6 @@ return array(
         'appKey'            => '<yourAppKey>',
         'regionId'          => 'cn-hangzhou',
         'androidChannel'    => '<yourChannel>',
+        'androidPopupActivity' => 'Activity',
     ),
 );

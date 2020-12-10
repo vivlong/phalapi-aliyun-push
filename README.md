@@ -1,4 +1,4 @@
-# 阿里云移动推送服务端扩展
+# PhalApi 2.x 的阿里云移动推送扩展
 PhalApi 2.x 扩展类库：基于阿里云移动推送的服务端扩展。  
 ![Packagist](https://img.shields.io/packagist/dt/vivlong/phalapi-aliyun-push)  
 
@@ -17,7 +17,10 @@ PhalApi 2.x 扩展类库：基于阿里云移动推送的服务端扩展。
     'AliyunPush' =>  array(
         'accessKeyId'       => '<yourAccessKeyId>',
         'accessKeySecret'   => '<yourAccessKeySecret>',
+        'appKey'            => '<yourAppKey>',
         'regionId'          => 'cn-hangzhou',
+        'androidChannel'    => '<yourChannel>',
+        'androidPopupActivity' => 'Activity',
     ),
 ```
 并根据自己的情况修改填充。  
